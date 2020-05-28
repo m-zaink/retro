@@ -3,6 +3,7 @@
 // **
 
 import 'package:flutter/material.dart';
+import 'package:retro/asset_images_url.dart';
 
 class RetroScreen extends StatefulWidget {
   final List<Color> channels = [
@@ -81,7 +82,7 @@ class _RetroScreenState extends State<RetroScreen>
 
   Widget get _retroLogo => Center(
         child: Image.asset(
-          'images/retro_logo.png',
+          AssetImagesURL.kRetroLogo,
           height: 300,
         ),
       );
@@ -90,14 +91,12 @@ class _RetroScreenState extends State<RetroScreen>
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
         ),
-        child: Expanded(
-          child: GestureDetector(
-            onTap: _powerButtonClicked,
-            child: Container(
-              color: _currentChannel,
-              child: Image.asset(
-                'images/retro_tv.png',
-              ),
+        child: GestureDetector(
+          onTap: _powerButtonClicked,
+          child: Container(
+            color: _currentChannel,
+            child: Image.asset(
+              AssetImagesURL.kRetroTV,
             ),
           ),
         ),
@@ -213,11 +212,24 @@ class _RetroScreenState extends State<RetroScreen>
       );
 
   Widget get _copyRightRetroRemote => Center(
-        child: Text(
-          '© Retro Remote',
-          style: TextStyle(
-            color: Colors.white,
-          ),
+        child: Column(
+          children: [
+            Text(
+              '© Retro Remote',
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'm_zaink',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 12.0,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+          ],
         ),
       );
 
@@ -264,12 +276,6 @@ class _RetroScreenState extends State<RetroScreen>
 
   bool get _tvIsNotOff => !_tvIsOff;
 
-  Color get _nextChannel => widget.channels[_nextChannelIndex];
-
-  Color get _prevChannel => widget.channels[_prevChannelIndex];
-
-  Color get _lastPlayedChannel => widget.channels[_currentChannelIndex];
-
   int get _nextChannelIndex =>
       _currentChannelIndex = (++_currentChannelIndex) % widget.channels.length;
 
@@ -280,4 +286,10 @@ class _RetroScreenState extends State<RetroScreen>
       _currentVolume == 100 ? 100 : (_currentVolume + 5) % 105;
 
   int get _prevVolume => _currentVolume == 0 ? 0 : (_currentVolume - 5) % 105;
+
+  Color get _nextChannel => widget.channels[_nextChannelIndex];
+
+  Color get _prevChannel => widget.channels[_prevChannelIndex];
+
+  Color get _lastPlayedChannel => widget.channels[_currentChannelIndex];
 }

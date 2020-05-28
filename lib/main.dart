@@ -3,7 +3,7 @@
 // **
 
 import 'package:flutter/material.dart';
-import 'package:retro/home_screen.dart';
+import 'package:retro/retro_screen.dart';
 
 void main() => runApp(RetroApp());
 
@@ -13,7 +13,7 @@ class RetroApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Retro',
-      home: HomeScreen(),
+      home: RetroScreen(),
     );
   }
 }
