@@ -1,8 +1,8 @@
 {
-    "name": "retro",
+    "name": "Retro",
     "short_name": "retro",
     "start_url": ".",
-    "display": "standalone",
+    "display": "minimal-ui",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
     "description": "A fun application to simulate a retro television (TV).",

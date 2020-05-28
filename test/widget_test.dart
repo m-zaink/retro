@@ -6,9 +6,10 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:retro/main.dart';
 
 void main() {
   testWidgets('Retro App smoke test', (WidgetTester tester) async {
-
+    var widget = tester.pumpWidget(RetroApp());
   });
 }

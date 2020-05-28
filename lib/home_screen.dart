@@ -2,8 +2,6 @@
 // Created by Mohammed Sadiq on 28/05/20.
 // **
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
