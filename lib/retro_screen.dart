@@ -250,6 +250,8 @@ class _RetroScreenState extends State<RetroScreen>
     if (_tvIsNotOff) {
       _currentChannel = _nextChannel;
       setState(() {});
+    } else {
+      showSnackBarForTVTurnedOff();
     }
   }
 
@@ -257,6 +259,8 @@ class _RetroScreenState extends State<RetroScreen>
     if (_tvIsNotOff) {
       _currentChannel = _prevChannel;
       setState(() {});
+    } else {
+      showSnackBarForTVTurnedOff();
     }
   }
 
@@ -264,6 +268,8 @@ class _RetroScreenState extends State<RetroScreen>
     if (_tvIsNotOff) {
       _currentVolume = _nextVolume;
       setState(() {});
+    } else {
+      showSnackBarForTVTurnedOff();
     }
   }
 
@@ -271,8 +277,21 @@ class _RetroScreenState extends State<RetroScreen>
     if (_tvIsNotOff) {
       _currentVolume = _prevVolume;
       setState(() {});
+    } else {
+      showSnackBarForTVTurnedOff();
     }
   }
+
+  void showSnackBarForTVTurnedOff() => _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.blue,
+          duration: Duration(
+            seconds: 1,
+            milliseconds: 500,
+          ),
+          content: Text('TV is turned off. Please turn on and try again.'),
+        ),
+      );
 
   bool get _tvIsNotOff => !_tvIsOff;
 
