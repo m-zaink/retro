@@ -8,5 +8,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Retro App smoke test', (WidgetTester tester) async {});
+  testWidgets('Retro App smoke test', (WidgetTester tester) async {
+
+  });
 }
