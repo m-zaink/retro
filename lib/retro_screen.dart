@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
+class RetroScreen extends StatefulWidget {
   final List<Color> channels = [
     Colors.purple,
     Colors.indigo,
@@ -12,16 +12,18 @@ class HomeScreen extends StatefulWidget {
     Colors.green,
     Colors.yellow,
     Colors.orange,
-    Colors.orange,
+    Colors.red,
   ];
 
   final Color tvOffChannel = Colors.black;
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _RetroScreenState createState() => _RetroScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _RetroScreenState extends State<RetroScreen>
+    with SingleTickerProviderStateMixin {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _retroVisible = false;
   int _currentChannelIndex = 0;
   bool _tvIsOff = true;
@@ -37,41 +39,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Center(
-          child: _retroVisible
-              ? retroLogo
-              : Column(
-                  children: [
-                    Spacer(),
-                    tv,
-                    Spacer(),
-                    volumeIndicator,
-                    Spacer(),
-                    remote,
-                    Spacer(),
-                    copyRightRetroRemote,
-                  ],
-                ),
-        ),
-      ),
+      key: _scaffoldKey,
+      appBar: _retroAppBar,
+      backgroundColor: _backgroundColor,
+      body: _retroBody,
     );
   }
 
-  Widget get retroLogo => Center(
-        child: Image.asset(
-          'images/retro_logo.png',
-          height: 300,
-        ),
-      );
+  Color get _backgroundColor => Colors.black;
 
-  Widget get appBar => AppBar(
+  Widget get _retroAppBar => AppBar(
+        centerTitle: true,
         title: GestureDetector(
-          onTap: () {
-            setState(() => _retroVisible = !_retroVisible);
-          },
+          onTap: () => setState(_flipRetroVisible),
           child: Text(
             'Retro',
             style: TextStyle(
@@ -83,15 +63,47 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0.0,
       );
 
-  Widget get tv => Container(
-        color: _currentChannel,
+  Widget get _retroBody => Container(
+        child: _retroVisible
+            ? _retroLogo
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _tv,
+                  _volumeIndicator,
+                  _remote,
+                  _copyRightRetroRemote,
+                ],
+              ),
+      );
+
+  void _flipRetroVisible() => _retroVisible = !_retroVisible;
+
+  Widget get _retroLogo => Center(
         child: Image.asset(
-          'images/retro_tv.png',
-          width: MediaQuery.of(context).size.width * 0.9,
+          'images/retro_logo.png',
+          height: 300,
         ),
       );
 
-  Widget get volumeIndicator => SliderTheme(
+  Widget get _tv => Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+        ),
+        child: Expanded(
+          child: GestureDetector(
+            onTap: _powerButtonClicked,
+            child: Container(
+              color: _currentChannel,
+              child: Image.asset(
+                'images/retro_tv.png',
+              ),
+            ),
+          ),
+        ),
+      );
+
+  Widget get _volumeIndicator => SliderTheme(
         data: SliderThemeData(
           thumbShape: SliderComponentShape.noThumb,
         ),
@@ -105,24 +117,27 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  Widget get remote => Column(
+  Widget get _remote => Column(
         children: [
-          nextChannelButton,
+          _nextChannelButton,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              volumeDownButton,
-              powerButton,
-              volumeUpButton,
+              _volumeDownButton,
+              _powerButton,
+              _volumeUpButton,
             ],
           ),
-          previousChannelButton
+          _previousChannelButton
         ],
       );
 
-  Widget get nextChannelButton => Column(
+  Widget get _nextChannelButton => Column(
         children: [
-          Text('Ch+'),
+          Text(
+            'Ch+',
+            style: TextStyle(color: Colors.white),
+          ),
           IconButton(
             icon: Icon(
               Icons.keyboard_arrow_up,
@@ -133,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       );
 
-  Widget get previousChannelButton => Column(
+  Widget get _previousChannelButton => Column(
         children: [
           IconButton(
             icon: Icon(
@@ -142,11 +157,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             onPressed: _previousChannelButtonClick,
           ),
-          Text('Ch-'),
+          Text(
+            'Ch-',
+            style: TextStyle(color: Colors.white),
+          ),
         ],
       );
 
-  Widget get volumeUpButton => Expanded(
+  Widget get _volumeUpButton => Expanded(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -157,16 +175,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onPressed: _volumeUpButtonClicked,
             ),
-            Text('Vol+'),
+            Text(
+              'Vol+',
+              style: TextStyle(color: Colors.white),
+            ),
           ],
         ),
       );
 
-  Widget get volumeDownButton => Expanded(
+  Widget get _volumeDownButton => Expanded(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text('Vol-'),
+            Text(
+              'Vol-',
+              style: TextStyle(color: Colors.white),
+            ),
             IconButton(
               icon: Icon(
                 Icons.chevron_left,
@@ -178,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  Widget get powerButton => Expanded(
+  Widget get _powerButton => Expanded(
         child: IconButton(
           icon: Icon(
             Icons.power_settings_new,
@@ -188,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  Widget get copyRightRetroRemote => Center(
+  Widget get _copyRightRetroRemote => Center(
         child: Text(
           '© Retro Remote',
           style: TextStyle(
@@ -199,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _powerButtonClicked() {
     if (_tvIsOff) {
-      _currentChannel = widget.channels[_currentChannelIndex];
+      _currentChannel = _lastPlayedChannel;
     } else {
       _currentChannel = widget.tvOffChannel;
     }
@@ -211,43 +235,49 @@ class _HomeScreenState extends State<HomeScreen> {
   void flipTvIsOff() => _tvIsOff = !_tvIsOff;
 
   void _nextChannelButtonClicked() {
-    if (tvIsNotOff) {
-      _currentChannel = nextChannel;
+    if (_tvIsNotOff) {
+      _currentChannel = _nextChannel;
       setState(() {});
     }
   }
 
   void _previousChannelButtonClick() {
-    if (tvIsNotOff) {
-      _currentChannel = prevChannel;
+    if (_tvIsNotOff) {
+      _currentChannel = _prevChannel;
       setState(() {});
     }
   }
 
   void _volumeUpButtonClicked() {
-    if (tvIsNotOff) {
-      _currentVolume = nextVolume;
+    if (_tvIsNotOff) {
+      _currentVolume = _nextVolume;
       setState(() {});
     }
   }
 
   void _volumeDownButtonClicked() {
-    if (tvIsNotOff) {
-      _currentVolume = prevVolume;
+    if (_tvIsNotOff) {
+      _currentVolume = _prevVolume;
       setState(() {});
     }
   }
 
-  bool get tvIsNotOff => !_tvIsOff;
+  bool get _tvIsNotOff => !_tvIsOff;
 
-  Color get nextChannel =>
-      widget.channels[++_currentChannelIndex % widget.channels.length];
+  Color get _nextChannel => widget.channels[_nextChannelIndex];
 
-  Color get prevChannel =>
-      widget.channels[--_currentChannelIndex % widget.channels.length];
+  Color get _prevChannel => widget.channels[_prevChannelIndex];
 
-  int get nextVolume =>
+  Color get _lastPlayedChannel => widget.channels[_currentChannelIndex];
+
+  int get _nextChannelIndex =>
+      _currentChannelIndex = (++_currentChannelIndex) % widget.channels.length;
+
+  int get _prevChannelIndex =>
+      _currentChannelIndex = (--_currentChannelIndex) % widget.channels.length;
+
+  int get _nextVolume =>
       _currentVolume == 100 ? 100 : (_currentVolume + 5) % 105;
 
-  int get prevVolume => _currentVolume == 0 ? 0 : (_currentVolume - 5) % 105;
+  int get _prevVolume => _currentVolume == 0 ? 0 : (_currentVolume - 5) % 105;
 }
